@@ -4,7 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppLanguage extends ChangeNotifier {
   Locale _appLocale = Locale('en');
 
-  Locale get appLocal => _appLocale ?? Locale("en");
+  Locale get appLocale => _appLocale ?? Locale("en");
+
+  bool isEng() {
+    return appLocale.languageCode == 'en';
+  }
+
   fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
     if (prefs.getString('language_code') == null) {
@@ -23,8 +28,7 @@ class AppLanguage extends ChangeNotifier {
     }
     if (type == Locale("zh")) {
       _appLocale = Locale("zh");
-      await prefs.setString('language_code', 'zh');
-      await prefs.setString('countryCode', '');
+      await prefs.setString('language_code', 'zh');      
     } else {
       _appLocale = Locale("en");
       await prefs.setString('language_code', 'en');      

@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vote4hk_mobile/blocs/app_bloc.dart';
+import 'package:vote4hk_mobile/i18n/app_language.dart';
+import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -29,14 +32,35 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var appLang = Provider.of<AppLanguage>(context);
+    print(appLang);
+    print(AppLocalizations.of(context).get('app_title'));
     return Stack(
       children: <Widget>[
         Scaffold(
             // TODO: extract to shared instance
             appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Text("vote4hk"),
+              title: Text(AppLocalizations.of(context).get('app_title')),
             ),
+            drawer: Drawer(
+                child: ListView(
+                    // Important: Remove any padding from the ListView.
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                  DrawerHeader(
+                    child: Text('Drawer Header'),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                  ),
+                  ListTile(
+                    title: appLang.isEng() ? Text('中文') : Text('English') ,
+                    onTap: () {
+                      appLang.changeLanguage(appLang.isEng() ? Locale('zh') : Locale('en'));
+                      Navigator.pop(context);
+                    },
+                  ),                  
+                ])),
             body: StreamBuilder(
               stream: AppBloc.instance.cases,
               builder: (BuildContext context, AsyncSnapshot snapshot) {

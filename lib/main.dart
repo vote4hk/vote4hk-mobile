@@ -11,37 +11,21 @@ import 'package:provider/provider.dart';
 BuildContext _context;
 SharedPreferences sharedPreferences;
 
-class Vote4HKApp extends StatefulWidget {
+class Vote4HKApp extends StatelessWidget {
   final AppLanguage appLanguage;
 
   // Constructor
   Vote4HKApp({this.appLanguage});
 
   @override
-  State<StatefulWidget> createState() => _Vote4HKAppState();
-}
-
-class _Vote4HKAppState extends State<Vote4HKApp> {
-  // TODO: add init data fetch bloc
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
-        create: (_) => widget.appLanguage,
+        create: (_) => appLanguage,
         child: Consumer<AppLanguage>(builder: (context, model, child) {
           return MaterialApp(
+            locale: model.appLocale,
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -49,7 +33,7 @@ class _Vote4HKAppState extends State<Vote4HKApp> {
             ],
             supportedLocales: [
               const Locale('en', ''),
-              const Locale.fromSubtags(languageCode: 'zh'),
+              const Locale('zh', ''),
             ],
             theme: ThemeData(
               primaryColor: Color.fromRGBO(77, 83, 147, 1),
@@ -66,6 +50,9 @@ class _Vote4HKAppState extends State<Vote4HKApp> {
 }
 
 void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
   AppLanguage language = AppLanguage();
   await language.fetchLocale();
 

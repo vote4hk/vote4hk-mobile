@@ -24,7 +24,7 @@ class AppLocalizations {
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
     String jsonString =
-    await rootBundle.loadString('i18n/${locale.languageCode}.json');
+    await rootBundle.loadString('assets/i18n/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((key, value) {
@@ -49,7 +49,7 @@ class _AppLocalizationsDelegate
   @override
   bool isSupported(Locale locale) {
     // Include all of your supported language codes here
-    return ['en', 'ar'].contains(locale.languageCode);
+    return ['en', 'zh'].contains(locale.languageCode);
   }
 
   @override
@@ -61,5 +61,5 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool shouldReload(_AppLocalizationsDelegate old) => false;
+  bool shouldReload(_AppLocalizationsDelegate old) => true;
 }
