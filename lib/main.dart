@@ -1,117 +1,126 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './screens/layoutTemplate.dart';
+import './locator.dart';
+import 'services/authService.dart';
+
+//==================This file is the Splash Screen for the app==================
+BuildContext _context;
+SharedPreferences sharedPreferences;
+AuthService authService;
+
+Widget landingMain = Container();
+LayoutTemplate layoutTemplate = LayoutTemplate();
+
+final ThemeData kIOSTheme = new ThemeData(
+  primarySwatch: Colors.blue,
+  primaryColor: Colors.grey,
+  primaryColorBrightness: Brightness.light,
+);
+
+final ThemeData kDefaultTheme = new ThemeData(
+        primarySwatch:  Colors.blue,
+        accentColor: Colors.yellow,
+        
+        primaryIconTheme: IconThemeData(color: Colors.black),
+        primaryTextTheme: TextTheme(
+          title: TextStyle(
+          color: Colors.black
+        )),
+        //backgroundColor: Colors.black,
+        textTheme: TextTheme(
+          headline1: TextStyle(
+              fontFamily: 'Sans',
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 20),
+          bodyText1: TextStyle(
+              fontFamily: 'Sans',
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 16),
+          bodyText2: TextStyle(
+              fontFamily: 'Sans',
+              fontWeight: FontWeight.normal,
+              color: Colors.black,
+              fontSize: 12),
+          subtitle1: TextStyle(
+              fontFamily: 'Sans',
+              fontWeight: FontWeight.normal,
+              color: Colors.black,
+              fontSize: 10),
+          subtitle2: TextStyle(
+              fontFamily: 'Sans',
+              fontWeight: FontWeight.normal,
+              color: Colors.black,
+              fontSize: 8),              
+        ),
+      );
 
 void main() {
-  runApp(MyApp());
+  setupLocator();
+  runApp(new MaterialApp(
+    onGenerateRoute: getFirstRoute,
+    theme: kDefaultTheme, 
+    home: new SplashScreen()));
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+Route<dynamic> getFirstRoute(RouteSettings settings) {
+  if(settings.name != null) {
+    initialRoute = settings.name;
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class SplashScreen extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _SplashScreenState createState() => new _SplashScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    //Call the Class constructor and initialize the object
+    SharedPreferences.getInstance().then((value) {
+      sharedPreferences = value;
+      authService = new AuthService();
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+    double splashImageSize = 
+      (MediaQuery.of(context).size.width > MediaQuery.of(context).size.height) ? 
+      MediaQuery.of(context).size.height / 2 :
+      MediaQuery.of(context).size.width / 2;
+    _context = context;
+    //return LayoutTemplate();
+    return new Scaffold(
+        body: Container(
+      color: Colors.yellow,
+      child: Center(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            //Image(image: AssetImage('assets/images/Icon-512.png'), width: splashImageSize),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Vote4 HK",
+                  style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05)),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    ));
   }
+}
+
+void mainNavigationPage() {
+  //if (blIsSignedIn) {
+    Navigator.pushReplacement(
+      _context,
+      MaterialPageRoute(builder: (context) => layoutTemplate,),
+    );
 }
