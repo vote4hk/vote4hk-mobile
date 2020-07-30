@@ -32,16 +32,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Stack(
       children: <Widget>[
         Scaffold(
+            // TODO: extract to shared instance
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: Text("vote4hk"),              
+              title: Text("vote4hk"),
             ),
             body: StreamBuilder(
               stream: AppBloc.instance.cases,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 return Stack(
-                  children: [                    
-                  ],
+                  children: [],
                 );
               },
             )),

@@ -1,0 +1,1 @@
+const languages = ['en', 'zh'];
