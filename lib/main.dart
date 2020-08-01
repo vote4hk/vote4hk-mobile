@@ -36,9 +36,17 @@ class Vote4HKApp extends StatelessWidget {
               const Locale('zh', ''),
             ],
             theme: ThemeData(
-              primaryColor: Color.fromRGBO(77, 83, 147, 1),
-              cursorColor: Colors.white, // for text color
-            ),
+                primaryColor: Color.fromRGBO(77, 83, 147, 1),
+                cursorColor: Colors.white, // for text color
+                textTheme: TextTheme(
+                  headline1:
+                      TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+                  headline6:
+                      TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+                  bodyText1: TextStyle(fontSize: 16.0, fontFamily: 'Hind'),
+                  bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Color.fromRGBO(0, 0, 0, 1.0)),
+                  caption: TextStyle(fontSize: 12.0, fontFamily: 'Hind', color: Color.fromRGBO(0, 0, 0, 0.6)),
+                )),
             home: HomePage(),
             routes: <String, WidgetBuilder>{
               '/home': (BuildContext context) => HomePage(),
@@ -50,7 +58,6 @@ class Vote4HKApp extends StatelessWidget {
 }
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   AppLanguage language = AppLanguage();

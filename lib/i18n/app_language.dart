@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLanguage extends ChangeNotifier {
@@ -8,6 +9,11 @@ class AppLanguage extends ChangeNotifier {
 
   bool isEng() {
     return appLocale.languageCode == 'en';
+  }
+
+  static bool isContextEng(BuildContext context) {
+    var appLang = Provider.of<AppLanguage>(context);
+    return appLang.isEng();
   }
 
   fetchLocale() async {

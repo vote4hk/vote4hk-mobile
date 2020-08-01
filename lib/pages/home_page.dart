@@ -5,13 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:vote4hk_mobile/blocs/app_bloc.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
+import 'package:vote4hk_mobile/models/case.dart';
+import 'package:vote4hk_mobile/widgets/stateless/case_card.dart';
 
+// TODO: move this to case page
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
   AnimationController _fadeController;
   Animation _fadeAnimation;
   @override
@@ -33,14 +39,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var appLang = Provider.of<AppLanguage>(context);
-    print(appLang);
-    print(AppLocalizations.of(context).get('app_title'));
     return Stack(
       children: <Widget>[
         Scaffold(
             // TODO: extract to shared instance
             appBar: AppBar(
-              title: Text(AppLocalizations.of(context).get('app_title')),
+              title: Text(AppLocalizations.of(context).get('site.title')),
             ),
             drawer: Drawer(
                 child: ListView(
@@ -54,18 +58,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                   ListTile(
-                    title: appLang.isEng() ? Text('中文') : Text('English') ,
+                    title: appLang.isEng() ? Text('中文') : Text('English'),
                     onTap: () {
-                      appLang.changeLanguage(appLang.isEng() ? Locale('zh') : Locale('en'));
+                      appLang.changeLanguage(
+                          appLang.isEng() ? Locale('zh') : Locale('en'));
                       Navigator.pop(context);
                     },
-                  ),                  
+                  ),
                 ])),
-            body: StreamBuilder(
+            body: StreamBuilder<List<Case>>(
               stream: AppBloc.instance.cases,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Stack(
-                  children: [],
+                List<Case> cases = snapshot.data;
+                return Scaffold(
+                  body: RefreshIndicator(
+                    key: _refreshIndicatorKey,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        // in reverse order
+                        return CaseCard(data: cases[cases.length - 1 - index]);
+                      },
+                      itemCount: cases?.length ?? 0,
+                    ),
+                    onRefresh: () async {
+                      return Future.delayed(Duration(milliseconds: 1000));
+                    },
+                  ),
+                  resizeToAvoidBottomPadding: false,
                 );
               },
             )),

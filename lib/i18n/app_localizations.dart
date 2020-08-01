@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-
 class AppLocalizations {
   final Locale locale;
 
@@ -17,14 +16,14 @@ class AppLocalizations {
 
   // Static member to have a simple access to the delegate from the MaterialApp
   static const LocalizationsDelegate<AppLocalizations> delegate =
-  _AppLocalizationsDelegate();
+      _AppLocalizationsDelegate();
 
   Map<String, String> _localizedStrings;
 
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
     String jsonString =
-    await rootBundle.loadString('assets/i18n/${locale.languageCode}.json');
+        await rootBundle.loadString('assets/i18n/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((key, value) {
@@ -37,6 +36,14 @@ class AppLocalizations {
   // This method will be called from every widget which needs a localized text
   String get(String key) {
     return _localizedStrings[key] ?? key;
+  }
+
+  String getTemplate(String key, Map<String, String> params) {
+    var string = _localizedStrings[key] ?? key;
+    params.forEach((k, v) {
+      string = string.replaceAll('{{$k}}', v);
+    });
+    return string;
   }
 }
 
