@@ -42,3 +42,7 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# Ignore the manifest and appdelegate to hide the API key
+ios/Runner/AppDelegate.swift
+android/app/src/main/AndroidManifest.xml
