@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote4hk_mobile/blocs/app_bloc.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/models/case.dart';
 import 'package:vote4hk_mobile/utils/color.dart';
 import 'package:vote4hk_mobile/widgets/stateless/case_card.dart';
+import 'package:vote4hk_mobile/services/user_service.dart';
 
 // TODO: move this to case page
 class HomePage extends StatefulWidget {
@@ -19,8 +23,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   AnimationController _fadeController;
   Animation _fadeAnimation;
+  SharedPreferences _sharedPreferences;
   @override
   void initState() {
     super.initState();
@@ -30,11 +36,79 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(_fadeController);
 
     _fadeController.forward();
+    initPlatformState();
+  }
+
+  initPlatformState() async {
+    fcmListeners();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void iosPermission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+  }
+
+  void fcmListeners() {
+    if (Platform.isIOS) iosPermission();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        var data = message['data'] == null ? message : message['data'];
+        // data is a json map
+        print('on message $data');
+        //_showItemDialog(data) for the new notification received
+        _showItemDialog(data);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        var data = message['data'] == null ? message : message['data'];
+        print('onResume $data');
+        // TODO we should add code to route to target page
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        var data = message['data'] == null ? message : message['data'];
+        print('onLaunch $data');
+        // TODO we should add code to route to target page
+      },
+    );
+  }
+
+  Widget _buildDialog(BuildContext context, String message) {
+    return AlertDialog(
+      content: Text('$message'),
+      actions: <Widget>[
+        FlatButton(
+          child: Icon(Icons.check_circle),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+        ),
+        FlatButton(
+          child: Icon(Icons.clear),
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showItemDialog(var data) {
+    showDialog<bool>(
+      context: context,
+      builder: (_) => _buildDialog(context, data.toString()),
+    ).then((bool shouldNavigate) {
+      if (shouldNavigate == true) {
+        // do nothing now
+      }
+    });
   }
 
   @override

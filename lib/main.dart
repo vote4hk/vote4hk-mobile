@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/utils/color.dart';
+import 'package:vote4hk_mobile/services/user_service.dart';
 import 'pages/home_page.dart';
 import 'package:provider/provider.dart';
 
 //==================This file is the Splash Screen for the app==================
-SharedPreferences sharedPreferences;
+BuildContext _context;
 
 class Vote4HKApp extends StatelessWidget {
   final AppLanguage appLanguage;
@@ -61,9 +62,15 @@ class Vote4HKApp extends StatelessWidget {
   }
 }
 
+Future<void> initFirestoreSettings() async {
+  Firestore firestore = Firestore();
+  await firestore.settings(persistenceEnabled: true);
+  userService = UserService();
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await initFirestoreSettings();
   AppLanguage language = AppLanguage();
   await language.fetchLocale();
 
