@@ -23,6 +23,7 @@ cp ./android/app/src/main/AndroidManifest.xml.sample ./android/app/src/main/Andr
 # and modify the API key there
 ```
 
+Or you can simply do a full text search to lookup `YOUR KEY HERE` to replace it.
 
 ## Localization
 
