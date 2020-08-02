@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
+import 'package:vote4hk_mobile/pages/case_detail_page.dart';
 import 'pages/home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -50,6 +51,7 @@ class Vote4HKApp extends StatelessWidget {
             home: HomePage(),
             routes: <String, WidgetBuilder>{
               '/home': (BuildContext context) => HomePage(),
+              '/case/detail': (BuildContext context) => CaseDetailPage(),
             },
             initialRoute: '/login',
           );

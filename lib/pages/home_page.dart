@@ -51,12 +51,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     // Important: Remove any padding from the ListView.
                     padding: EdgeInsets.zero,
                     children: <Widget>[
-                  DrawerHeader(
-                    child: Text('Drawer Header'),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                    ),
-                  ),
                   ListTile(
                     title: appLang.isEng() ? Text('中文') : Text('English'),
                     onTap: () {
