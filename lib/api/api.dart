@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:vote4hk_mobile/models/case.dart';
 import 'package:vote4hk_mobile/models/case_group.dart';
+import 'package:vote4hk_mobile/models/case_location.dart';
 import 'package:vote4hk_mobile/models/patient_track.dart';
 
 import 'exceptions.dart';
@@ -23,9 +24,6 @@ class Vote4HKApi {
     _token = t;
   }
 
-  /// Login.
-  ///
-  /// Will throw [Exception] if any kind of error
   Future<List<Case>> getCases() async {
     var uri = _endPoint('page-data/cases/page-data.json');
 
@@ -69,6 +67,21 @@ class Vote4HKApi {
     });
 
     return cases;
+  }
+
+
+  Future<List<CaseLocation>> getCaseLocations() async {
+    var uri = _endPoint('page-data/high-risk/page-data.json');
+
+    Map data = await _getRequest(uri);
+    List<CaseLocation> locations = data['result']['data']['allWarsCaseLocation']['edges']
+            .map<CaseLocation>((json) => CaseLocation.fromJson(json['node']))
+            .toList() ??
+        new List();
+
+   
+
+    return locations;
   }
 
   ///

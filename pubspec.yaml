@@ -45,8 +45,13 @@ dependencies:
   # This is for google map but not stable
   google_maps_flutter: ^0.5.28+1
 
+  # clustering for google map
+  fluster:  ^1.1.2
+
+
   # may remove this after switched to bloc?
   provider: ^3.0.0
+  
 
   flutter_localizations:
     sdk: flutter
@@ -73,6 +78,7 @@ flutter:
   assets:
       - assets/i18n/en.json
       - assets/i18n/zh.json
+      - assets/cluster_bg.png      
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

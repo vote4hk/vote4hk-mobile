@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/pages/case_detail_page.dart';
+import 'package:vote4hk_mobile/pages/high_risk_page.dart';
 import 'pages/home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -52,8 +53,9 @@ class Vote4HKApp extends StatelessWidget {
             routes: <String, WidgetBuilder>{
               '/home': (BuildContext context) => HomePage(),
               '/case/detail': (BuildContext context) => CaseDetailPage(),
+              '/high-risk': (BuildContext context) => HighRiskPage(),
             },
-            initialRoute: '/login',
+            initialRoute: '/high-risk',
           );
         }));
   }
