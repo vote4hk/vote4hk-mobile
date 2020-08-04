@@ -9,6 +9,7 @@ import 'package:vote4hk_mobile/blocs/map_bloc.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/models/case_location.dart';
 import 'package:vote4hk_mobile/models/map_marker.dart';
+import 'package:vote4hk_mobile/models/user_location.dart';
 
 // https://github.com/alfonsocejudo/fluster_demo/blob/master/lib/main.dart
 
@@ -81,10 +82,18 @@ class HighRiskPageState extends State<HighRiskPage> {
 
   // May be called as often as every frame, so just track the last zoom value.
   void _onCameraMove(CameraPosition cameraPosition) {
-    _currentZoom = cameraPosition.zoom;
+    _bloc.updateUserLocation(UserLocationRequest(
+      type: UserLocationRequestType.Add,
+      location: UserLocation(
+        addressEn: "test",
+        addressZh: "test_zh",
+        lat: cameraPosition.target.latitude,
+        lng: cameraPosition.target.longitude
+      )
+    ));
   }
 
   void _onCameraIdle() {
-    _bloc.setCameraZoom(_currentZoom);
+    // _bloc.setCameraZoom(_currentZoom);
   }
 }
