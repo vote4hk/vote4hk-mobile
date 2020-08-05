@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vote4hk_mobile/utils/color.dart';
 
 class CaseTitle extends StatelessWidget {
   final String caseNo;
@@ -10,12 +11,27 @@ class CaseTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color backgroundColor = getColorFromStatus(this.status);
     return Container(
       width: double.infinity,
-      color: getColorFromStatus(this.status),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(8.0),
+            topRight: Radius.circular(8.0),
+            bottomLeft: Radius.zero,
+            bottomRight: Radius.zero),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('#${this.caseNo} (${this.localizedStatus})', style: TextStyle(color: Colors.white, fontSize: 16),),
+        child: Text(
+          '#${this.caseNo} (${this.localizedStatus})',
+          style: TextStyle(
+              color: backgroundColor == WarsColors.greyLight
+                  ? Colors.black
+                  : Colors.white,
+              fontSize: 14),
+        ),
       ),
     );
   }
@@ -26,7 +42,7 @@ Color getColorFromStatus(String status) {
     case 'hospitalised':
     case 'stable':
       {
-        return Colors.amber[900];
+        return WarsColors.orange;
       }
     case 'hospitalised_again':
       {
@@ -34,11 +50,11 @@ Color getColorFromStatus(String status) {
       }
     case 'pending_admission':
       {
-        return Color(0xfff99f02);
+        return WarsColors.yellow;
       }
     case 'discharged':
       {
-        return Color(0xff368e3b);
+        return WarsColors.green;
       }
     case 'serious':
       {
@@ -46,19 +62,19 @@ Color getColorFromStatus(String status) {
       }
     case 'serious':
       {
-        return Colors.red[900];
+        return WarsColors.red;
       }
     case 'deceased':
       {
-        return Colors.grey[700];
+        return WarsColors.grey;
       }
     case 'asymptomatic':
       {
-        return Color(0xff4f5096);
+        return WarsColors.blue;
       }
     default:
       {
-        return Color(0xffcfcfcf);
+        return WarsColors.greyLight;
       }
   }
 }

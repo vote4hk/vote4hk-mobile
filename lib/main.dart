@@ -4,11 +4,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
+import 'package:vote4hk_mobile/utils/color.dart';
 import 'pages/home_page.dart';
 import 'package:provider/provider.dart';
 
 //==================This file is the Splash Screen for the app==================
-BuildContext _context;
 SharedPreferences sharedPreferences;
 
 class Vote4HKApp extends StatelessWidget {
@@ -36,7 +36,7 @@ class Vote4HKApp extends StatelessWidget {
               const Locale('zh', ''),
             ],
             theme: ThemeData(
-                primaryColor: Color.fromRGBO(77, 83, 147, 1),
+                primaryColor: WarsColors.blue,
                 cursorColor: Colors.white, // for text color
                 textTheme: TextTheme(
                   headline1:
@@ -44,14 +44,18 @@ class Vote4HKApp extends StatelessWidget {
                   headline6:
                       TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
                   bodyText1: TextStyle(fontSize: 16.0, fontFamily: 'Hind'),
-                  bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Color.fromRGBO(0, 0, 0, 1.0)),
-                  caption: TextStyle(fontSize: 12.0, fontFamily: 'Hind', color: Color.fromRGBO(0, 0, 0, 0.6)),
+                  bodyText2: TextStyle(
+                      fontSize: 14.0, fontFamily: 'Hind', color: Colors.black),
+                  caption: TextStyle(
+                      fontSize: 12.0,
+                      fontFamily: 'Hind',
+                      color: Color.fromRGBO(0, 0, 0, 0.6)),
                 )),
             home: HomePage(),
             routes: <String, WidgetBuilder>{
               '/home': (BuildContext context) => HomePage(),
             },
-            initialRoute: '/login',
+            initialRoute: '/',
           );
         }));
   }

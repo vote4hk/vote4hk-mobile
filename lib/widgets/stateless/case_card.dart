@@ -16,6 +16,13 @@ class CaseCard extends StatelessWidget {
 
     return Card(
         clipBehavior: Clip.hardEdge,
+        shadowColor: Colors.grey[50],
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.zero,
+                topRight: Radius.zero,
+                bottomLeft: Radius.circular(8.0),
+                bottomRight: Radius.circular(8.0))),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           CaseTitle(
             caseNo: data.caseNo,
