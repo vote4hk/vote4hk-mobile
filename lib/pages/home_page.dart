@@ -6,6 +6,7 @@ import 'package:vote4hk_mobile/blocs/app_bloc.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/models/case.dart';
+import 'package:vote4hk_mobile/utils/color.dart';
 import 'package:vote4hk_mobile/widgets/stateless/case_card.dart';
 
 // TODO: move this to case page
@@ -52,9 +53,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     padding: EdgeInsets.zero,
                     children: <Widget>[
                   DrawerHeader(
-                    child: Text('Drawer Header'),
+                    child: Text('Drawer Header',
+                        style: TextStyle(color: Colors.white)),
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: WarsColors.blue,
                     ),
                   ),
                   ListTile(
@@ -76,7 +78,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         // in reverse order
-                        return CaseCard(data: cases[cases.length - 1 - index]);
+                        return Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 4.0, left: 8.0, top: 4.0, right: 8.0),
+                            child: CaseCard(
+                                data: cases[cases.length - 1 - index]));
                       },
                       itemCount: cases?.length ?? 0,
                     ),
