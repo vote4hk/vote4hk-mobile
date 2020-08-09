@@ -84,6 +84,15 @@ class Vote4HKApi {
     return locations;
   }
 
+  Future<List<dynamic>> searchLocation(String address, String lang) async {
+    var uri = _searchEndPoint('search', {
+      'address': address,
+      'lang': lang
+    });
+    Map data = await _getRequest(uri);
+    return data['data']['results'];
+  }
+
   ///
   ///     ====================  Helper methods  =========================
   ///
@@ -92,6 +101,11 @@ class Vote4HKApi {
   Uri _endPoint(path, [Map<String, String> queryParameters]) {
     // TODO: move the env vars
     return Uri.https('wars.vote4.hk', path, queryParameters);
+  }
+
+  Uri _searchEndPoint(path, [Map<String, String> queryParameters]) {
+    // TODO: move the env vars
+    return Uri.https('addressparserapi-5f067.asia1.kinto.io', path, queryParameters);
   }
 
   Future<Map> _putRequest(Uri uri, Map jsonMap) async {

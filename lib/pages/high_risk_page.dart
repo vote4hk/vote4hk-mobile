@@ -10,6 +10,7 @@ import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/models/case_location.dart';
 import 'package:vote4hk_mobile/models/map_marker.dart';
 import 'package:vote4hk_mobile/models/user_location.dart';
+import 'package:vote4hk_mobile/api/api.dart';
 
 // https://github.com/alfonsocejudo/fluster_demo/blob/master/lib/main.dart
 
@@ -55,6 +56,14 @@ class HighRiskPageState extends State<HighRiskPage> {
     return new Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).get('site.title')),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: Search());
+            },
+          )
+        ],
       ),
       body: StreamBuilder<Map<MarkerId, Marker>>(
           stream: _bloc.markers,
@@ -83,17 +92,78 @@ class HighRiskPageState extends State<HighRiskPage> {
   // May be called as often as every frame, so just track the last zoom value.
   void _onCameraMove(CameraPosition cameraPosition) {
     _bloc.updateUserLocation(UserLocationRequest(
-      type: UserLocationRequestType.Add,
-      location: UserLocation(
-        addressEn: "test",
-        addressZh: "test_zh",
-        lat: cameraPosition.target.latitude,
-        lng: cameraPosition.target.longitude
-      )
-    ));
+        type: UserLocationRequestType.Add,
+        location: UserLocation(
+            addressEn: "test",
+            addressZh: "test_zh",
+            lat: cameraPosition.target.latitude,
+            lng: cameraPosition.target.longitude)));
   }
 
   void _onCameraIdle() {
     // _bloc.setCameraZoom(_currentZoom);
+  }
+}
+
+class Search extends SearchDelegate {
+
+  List<dynamic> _searchResults = List<dynamic>();
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    return theme.copyWith(
+        primaryColor: Colors.white,
+        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+        primaryColorBrightness: Brightness.light,
+        primaryTextTheme: theme.textTheme,
+        textTheme:
+            theme.textTheme.copyWith(headline6: TextStyle(fontSize: 20)));
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.search_rounded),
+        onPressed: () async {
+          var data = await api.searchLocation(query, 'zh_hk');
+          print(data);
+          _searchResults.clear();
+          _searchResults.addAll(data);
+          showResults(context);
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () async {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return ListView.builder(
+        itemCount: _searchResults.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(_searchResults[index]['full_address']),
+            subtitle: Text("${_searchResults[index]['coordinate']['lat']},${_searchResults[index]['coordinate']['lng']}"),
+            onTap: () {
+              showResults(context);
+            },
+          );
+        });
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Column();
   }
 }
