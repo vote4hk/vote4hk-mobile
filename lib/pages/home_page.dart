@@ -2,12 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote4hk_mobile/blocs/app_bloc.dart';
 import 'package:vote4hk_mobile/i18n/app_language.dart';
 import 'package:vote4hk_mobile/i18n/app_localizations.dart';
 import 'package:vote4hk_mobile/models/case.dart';
 import 'package:vote4hk_mobile/utils/color.dart';
 import 'package:vote4hk_mobile/widgets/stateless/case_card.dart';
+import 'package:vote4hk_mobile/services/user_service.dart';
+
+import '../services/user_service.dart';
+import '../services/user_service.dart';
 
 // TODO: move this to case page
 class HomePage extends StatefulWidget {
@@ -21,6 +26,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   AnimationController _fadeController;
   Animation _fadeAnimation;
+  SharedPreferences _sharedPreferences;
+  UserService _userService;
   @override
   void initState() {
     super.initState();
@@ -28,13 +35,54 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 1000), vsync: this);
 
     _fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(_fadeController);
-
+    initPlatformState();
     _fadeController.forward();
+  }
+
+  initPlatformState() async {
+    _userService = FirebaseUserService();
+    _userService.notifcationListener(
+        this._showNotifcationDialog, this._doNothing);
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Widget _buildDialog(BuildContext context, String message) {
+    return AlertDialog(
+      content: Text('$message'),
+      actions: <Widget>[
+        FlatButton(
+          child: Icon(Icons.check_circle),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+        ),
+        FlatButton(
+          child: Icon(Icons.clear),
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showNotifcationDialog(var data) {
+    showDialog<bool>(
+      context: context,
+      builder: (_) => _buildDialog(context, data.toString()),
+    ).then((bool shouldNavigate) {
+      if (shouldNavigate == true) {
+        _doNothing(data);
+      }
+    });
+  }
+
+  void _doNothing(var data) {
+    print('_doNothing $data');
   }
 
   @override
